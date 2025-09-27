@@ -1,0 +1,1829 @@
+{
+    "checksum": "cc09e2e4cef3e8d22a5a8c3d2af507d432c1bf92092739ec574dfa45eb2ca51a",
+    "data": {
+    "id": "4644d6a8-9155-4f76-87f3-bbc27a2fdb37",
+    "createdAt": 1758330810181,
+    "updatedAt": 1758330810527,
+    "title": "Overview In this project, learners will explore...",
+    "messages": [
+        {
+            "id": "bf47028b-dfab-41c9-abc4-339b15b56dfa",
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "Overview"
+                },
+                {
+                    "type": "text",
+                    "text": "In this project, learners will explore the complete lifecycle of designing and implementing robust RESTful APIs using Django. They will begin with scaffolding the project environment and progressively move through identifying and defining data models, establishing database relationships, and setting up clean, scalable URL routing. Emphasis is placed on following Django’s best practices to ensure maintainable and production-ready codebases."
+                },
+                {
+                    "type": "text",
+                    "text": "This project serves as a foundation for any backend developer aiming to master API development using the Django framework and prepares learners to build secure, scalable systems that follow modern architectural patterns."
+                },
+                {
+                    "type": "text",
+                    "text": "Project Objectives"
+                },
+                {
+                    "type": "text",
+                    "text": "By the end of this project, learners will be able to:"
+                },
+                {
+                    "type": "text",
+                    "text": "Scaffold a Django project using industry-standard project structures."
+                },
+                {
+                    "type": "text",
+                    "text": "Identify, define, and implement scalable data models using Django’s ORM."
+                },
+                {
+                    "type": "text",
+                    "text": "Establish one-to-many, many-to-many, and one-to-one relationships between models."
+                },
+                {
+                    "type": "text",
+                    "text": "Create clean and modular Django apps."
+                },
+                {
+                    "type": "text",
+                    "text": "Set up and configure URL routing for APIs using Django’s path and include functions."
+                },
+                {
+                    "type": "text",
+                    "text": "Follow best practices in file structure, code organization, and documentation."
+                },
+                {
+                    "type": "text",
+                    "text": "Build a maintainable API layer using Django REST Framework (optional enhancement)."
+                },
+                {
+                    "type": "text",
+                    "text": "Validate and test APIs with real data using tools like Postman or Swagger."
+                },
+                {
+                    "type": "text",
+                    "text": "Learning Outcomes"
+                },
+                {
+                    "type": "text",
+                    "text": "Upon completing this project, learners will:"
+                },
+                {
+                    "type": "text",
+                    "text": "Understand the structure of a Django project and how to scaffold it properly."
+                },
+                {
+                    "type": "text",
+                    "text": "Be able to design relational database schemas based on feature requirements."
+                },
+                {
+                    "type": "text",
+                    "text": "Gain confidence in using Django models and migrations to persist data."
+                },
+                {
+                    "type": "text",
+                    "text": "Build and route API endpoints that adhere to RESTful conventions."
+                },
+                {
+                    "type": "text",
+                    "text": "Separate concerns by organizing views, serializers (if using DRF), and URL configurations."
+                },
+                {
+                    "type": "text",
+                    "text": "Understand and apply modular development strategies by separating logic into reusable apps."
+                },
+                {
+                    "type": "text",
+                    "text": "Follow Django’s naming and configuration conventions to improve code readability and team collaboration."
+                },
+                {
+                    "type": "text",
+                    "text": "Key Implementation Phases"
+                },
+                {
+                    "type": "text",
+                    "text": "Project Setup and Environment Configuration"
+                },
+                {
+                    "type": "text",
+                    "text": "Create a virtual environment"
+                },
+                {
+                    "type": "text",
+                    "text": "Install Django"
+                },
+                {
+                    "type": "text",
+                    "text": "Scaffold the project with django-admin startproject and python manage.py startapp"
+                },
+                {
+                    "type": "text",
+                    "text": "Configure settings.py (INSTALLED_APPS, middleware, CORS, etc.)"
+                },
+                {
+                    "type": "text",
+                    "text": "Defining Data Models"
+                },
+                {
+                    "type": "text",
+                    "text": "Identify core models based on requirements (e.g., User, Property, Booking)"
+                },
+                {
+                    "type": "text",
+                    "text": "Use Django ORM to define model classes"
+                },
+                {
+                    "type": "text",
+                    "text": "Add field types, constraints, and default behaviors"
+                },
+                {
+                    "type": "text",
+                    "text": "Apply migrations and use Django Admin for verification"
+                },
+                {
+                    "type": "text",
+                    "text": "Establishing Relationships"
+                },
+                {
+                    "type": "text",
+                    "text": "Implement foreign keys, many-to-many relationships, and one-to-one links"
+                },
+                {
+                    "type": "text",
+                    "text": "Use related_name, on_delete, and reverse relationships effectively"
+                },
+                {
+                    "type": "text",
+                    "text": "Use Django shell to test object relations"
+                },
+                {
+                    "type": "text",
+                    "text": "URL Routing"
+                },
+                {
+                    "type": "text",
+                    "text": "Define app-specific routes using urls.py"
+                },
+                {
+                    "type": "text",
+                    "text": "Use include() to modularize routes per app"
+                },
+                {
+                    "type": "text",
+                    "text": "Follow RESTful naming conventions: /api/properties/, /api/bookings/<id>/"
+                },
+                {
+                    "type": "text",
+                    "text": "Create nested routes when necessary"
+                },
+                {
+                    "type": "text",
+                    "text": "Best Practices and Documentation"
+                },
+                {
+                    "type": "text",
+                    "text": "Use views.py to separate logic and ensure Single Responsibility"
+                },
+                {
+                    "type": "text",
+                    "text": "Document endpoints using README or auto-generated documentation tools"
+                },
+                {
+                    "type": "text",
+                    "text": "Keep configuration settings modular (e.g., using .env or settings/ directory structure)"
+                },
+                {
+                    "type": "text",
+                    "text": "Use versioned APIs (e.g., /api/v1/) to future-proof development"
+                },
+                {
+                    "type": "text",
+                    "text": "Best Practices for Scaffolding and Structuring Projects"
+                },
+                {
+                    "type": "text",
+                    "text": "AreaBest PracticesProject StructureKeep a modular structure with reusable apps, consistent naming, and organized folders (apps/, core/, etc.)Environment ConfigUse .env files and django-environ to manage secret keys and settingsModelsAvoid business logic in models; use helper functions or managers when necessaryMigrationsCommit migration files and test them on a fresh databaseRoutingNamespace routes and separate admin/API/user-related URLs for claritySecurityUse ALLOWED_HOSTS, avoid hardcoding credentials, and enable CORS properlyTestingUse Django’s test client or tools like Postman to validate endpoints early and oftenDocumentationAdd inline comments, maintain a clear README, and use tools like Swagger or DRF’s built-in docs"
+                },
+                {
+                    "type": "text",
+                    "text": "📝 Project Assessment (Hybrid)"
+                },
+                {
+                    "type": "text",
+                    "text": "Your project will be evaluated primarily through manual reviews. To ensure you receive your full score, please:"
+                },
+                {
+                    "type": "text",
+                    "text": "✅ Complete your project on time 📄 Submit all required files 🔗 Generate your review link 👥 Have your peers review your work"
+                },
+                {
+                    "type": "text",
+                    "text": "An auto-check will also be in place to verify the presence of core files needed for manual review."
+                },
+                {
+                    "type": "text",
+                    "text": "⏰ Important Note"
+                },
+                {
+                    "type": "text",
+                    "text": "If the deadline passes, you won’t be able to generate your review link—so be sure to submit on time!"
+                },
+                {
+                    "type": "text",
+                    "text": "We’re here to support your learning journey. Happy coding! ✨"
+                },
+                {
+                    "type": "text",
+                    "text": "Tasks"
+                },
+                {
+                    "type": "text",
+                    "text": "0. Project set up"
+                },
+                {
+                    "type": "text",
+                    "text": "mandatory"
+                },
+                {
+                    "type": "text",
+                    "text": "Objective: create a new django project and install django rest framework"
+                },
+                {
+                    "type": "text",
+                    "text": "Instructions:"
+                },
+                {
+                    "type": "text",
+                    "text": "Initialize a new django project django-admin startproject messaging_app"
+                },
+                {
+                    "type": "text",
+                    "text": "Install django REST Framework and set it up in the settings.py"
+                },
+                {
+                    "type": "text",
+                    "text": "Create a new app for the messaging functionality. (python manage.py startapp chats)"
+                },
+                {
+                    "type": "text",
+                    "text": "Repo:"
+                },
+                {
+                    "type": "text",
+                    "text": "GitHub repository: alx-backend-python"
+                },
+                {
+                    "type": "text",
+                    "text": "Directory: messaging_app"
+                },
+                {
+                    "type": "text",
+                    "text": "File: messaging_app/*"
+                },
+                {
+                    "type": "text",
+                    "text": "1. Define data Models"
+                },
+                {
+                    "type": "text",
+                    "text": "mandatory"
+                },
+                {
+                    "type": "text",
+                    "text": "Objective: Design the models for users, messages, and conversations."
+                },
+                {
+                    "type": "text",
+                    "text": "Instructions:"
+                },
+                {
+                    "type": "text",
+                    "text": "Using the tables definition described above,"
+                },
+                {
+                    "type": "text",
+                    "text": "Create the user Model an extension of the Abstract user for values not defined in the built-in Django User model"
+                },
+                {
+                    "type": "text",
+                    "text": "Create the conversation model that tracks which users are involved in a conversation"
+                },
+                {
+                    "type": "text",
+                    "text": "Create the message model containing the sender, conversation as defined in the shared schema attached to this project"
+                },
+                {
+                    "type": "text",
+                    "text": "Database Specification"
+                },
+                {
+                    "type": "text",
+                    "text": "Entities and Attributes"
+                },
+                {
+                    "type": "text",
+                    "text": "User"
+                },
+                {
+                    "type": "codeSnippet",
+                    "text": "    user_id (Primary Key, UUID, Indexed)\n    first_name (VARCHAR, NOT NULL)\n    last_name (VARCHAR, NOT NULL)\n    email (VARCHAR, UNIQUE, NOT NULL)\n    password_hash (VARCHAR, NOT NULL)\n    phone_number (VARCHAR, NULL)\n    role (ENUM: 'guest', 'host', 'admin', NOT NULL)\n    created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)\n"
+                },
+                {
+                    "type": "text",
+                    "text": "Message"
+                },
+                {
+                    "type": "codeSnippet",
+                    "text": "    message_id (Primary Key, UUID, Indexed)\n    sender_id (Foreign Key, references User(user_id))\n    message_body (TEXT, NOT NULL)\n    sent_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)\n"
+                },
+                {
+                    "type": "text",
+                    "text": "Conversation"
+                },
+                {
+                    "type": "codeSnippet",
+                    "text": "conversation_id (Primary Key, UUID, Indexed)\nparticipants_id (Foreign Key, references User(user_id)\ncreated_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)\n"
+                },
+                {
+                    "type": "text",
+                    "text": "Constraints:"
+                },
+                {
+                    "type": "codeSnippet",
+                    "text": "    User Table: Unique constraint on email, non-null constraints on required fields.\n    Property Table: Foreign key constraint on host_id, non-null constraints on essential attributes.\n    Booking Table: Foreign key constraints on property_id and user_id, status must be one of pending, confirmed, or canceled.\n    Payment Table: Foreign key constraint on booking_id, ensuring payment is linked to valid bookings.\n    Review Table: Constraints on rating values and foreign keys for property_id and user_id.\n    Message Table: Foreign key constraints on sender_id and recipient_id.\n"
+                },
+                {
+                    "type": "text",
+                    "text": "Indexing:"
+                },
+                {
+                    "type": "codeSnippet",
+                    "text": "**Primary Keys:** Indexed automatically.\n**Additional Indexes:** Indexes on email (User), property_id (Property and Booking), and booking_id (Booking and Payment)\n"
+                },
+                {
+                    "type": "text",
+                    "text": "Repo:"
+                },
+                {
+                    "type": "text",
+                    "text": "GitHub repository: alx-backend-python"
+                },
+                {
+                    "type": "text",
+                    "text": "Directory: messaging_app"
+                },
+                {
+                    "type": "text",
+                    "text": "File: messaging_app/chats/models.py"
+                },
+                {
+                    "type": "text",
+                    "text": "2. Create serializers to define the many to many relationships"
+                },
+                {
+                    "type": "text",
+                    "text": "mandatory"
+                },
+                {
+                    "type": "text",
+                    "text": "Objective: build serializers for the models"
+                },
+                {
+                    "type": "text",
+                    "text": "Instructions:"
+                },
+                {
+                    "type": "text",
+                    "text": "Create Serializers for Users, conversation and message"
+                },
+                {
+                    "type": "text",
+                    "text": "Ensure nested relationships are handled properly, like including messages within a conversation"
+                },
+                {
+                    "type": "text",
+                    "text": "Repo:"
+                },
+                {
+                    "type": "text",
+                    "text": "GitHub repository: alx-backend-python"
+                },
+                {
+                    "type": "text",
+                    "text": "Directory: messaging_app"
+                },
+                {
+                    "type": "text",
+                    "text": "File: messaging_app/chats/serializers.py"
+                },
+                {
+                    "type": "text",
+                    "text": "3. Build api endpoints with views"
+                },
+                {
+                    "type": "text",
+                    "text": "mandatory"
+                },
+                {
+                    "type": "text",
+                    "text": "Objective: implement API endpoints for conversations and messages"
+                },
+                {
+                    "type": "text",
+                    "text": "Instructions:"
+                },
+                {
+                    "type": "text",
+                    "text": "Using viewsets from rest-framework Create viewsets for listing conversations (ConversationViewSet) and messages (MessageViewSet)"
+                },
+                {
+                    "type": "text",
+                    "text": "Implement the endpoints to create a new conversation and send messages to an existing one"
+                },
+                {
+                    "type": "text",
+                    "text": "Repo:"
+                },
+                {
+                    "type": "text",
+                    "text": "GitHub repository: alx-backend-python"
+                },
+                {
+                    "type": "text",
+                    "text": "Directory: messaging_app"
+                },
+                {
+                    "type": "text",
+                    "text": "File: messaging_app/chats/views.py"
+                },
+                {
+                    "type": "text",
+                    "text": "4. Set up url routing"
+                },
+                {
+                    "type": "text",
+                    "text": "mandatory"
+                },
+                {
+                    "type": "text",
+                    "text": "Objective: configure URLS for the conversations and messages"
+                },
+                {
+                    "type": "text",
+                    "text": "Instructions:"
+                },
+                {
+                    "type": "text",
+                    "text": "Using Django rest framework DefaultRouter to automatically create the conversations and messages for your viewsets"
+                },
+                {
+                    "type": "text",
+                    "text": "Navigate to the main project’s urls.py i.e messaging_app/urls.py and include your created routes with path as api"
+                },
+                {
+                    "type": "text",
+                    "text": "Repo:"
+                },
+                {
+                    "type": "text",
+                    "text": "GitHub repository: alx-backend-python"
+                },
+                {
+                    "type": "text",
+                    "text": "Directory: messaging_app"
+                },
+                {
+                    "type": "text",
+                    "text": "File: messaging_app/chats/urls.py"
+                },
+                {
+                    "type": "text",
+                    "text": "5. Run the application to fix errors"
+                },
+                {
+                    "type": "text",
+                    "text": "mandatory"
+                },
+                {
+                    "type": "text",
+                    "text": "Objective: run and test the applications"
+                },
+                {
+                    "type": "text",
+                    "text": "Instructions:"
+                },
+                {
+                    "type": "text",
+                    "text": "Run python manage.py makemigrations, python manage.py migrate, python manage.py runserver to test and run the application"
+                },
+                {
+                    "type": "text",
+                    "text": "Fix any error or bugs produced"
+                },
+                {
+                    "type": "text",
+                    "text": "Repo:"
+                },
+                {
+                    "type": "text",
+                    "text": "GitHub repository: alx-backend-python"
+                },
+                {
+                    "type": "text",
+                    "text": "Directory: messaging_app"
+                },
+                {
+                    "type": "text",
+                    "text": "6. Manual Review"
+                },
+                {
+                    "type": "text",
+                    "text": "mandatory"
+                },
+                {
+                    "type": "text",
+                    "text": "Repo:"
+                },
+                {
+                    "type": "text",
+                    "text": "GitHub repository: alx-backend-python"
+                },
+                {
+                    "type": "text",
+                    "text": "Directory: messaging_app                                                                       Analyze all the code and see if what i have done goes in line with the question"
+                }
+            ],
+            "context": {
+                "currentFile": {
+                    "path": "messaging_app/chats/views.py",
+                    "fsPath": "C:/Users/ALSAINT/Desktop/alx-backend-python/messaging_app/chats/views.py",
+                    "sources": [
+                        "opened_tab"
+                    ],
+                    "content": "from django.shortcuts import render\n\n# Create your views here.\nfrom rest_framework import viewsets, status\nfrom rest_framework.decorators import action\nfrom rest_framework.response import Response\nfrom rest_framework.permissions import IsAuthenticated\nfrom django.db.models import Q\nfrom .models import User, Conversation, Message\nfrom .serializers import (\n    UserSerializer, ConversationSerializer, ConversationListSerializer,\n    MessageSerializer\n)\n\n\nclass UserViewSet(viewsets.ModelViewSet):\n    \"\"\"\n    ViewSet for managing users\n    \"\"\"\n    queryset = User.objects.all()\n    serializer_class = UserSerializer\n    permission_classes = [IsAuthenticated]\n\n    def get_queryset(self):\n        \"\"\"\n        Filter users based on search query\n        \"\"\"\n        queryset = User.objects.all()\n        search = self.request.query_params.get('search', None)\n        if search:\n            queryset = queryset.filter(\n                Q(email__icontains=search) |\n                Q(first_name__icontains=search) |\n                Q(last_name__icontains=search)\n            )\n        return queryset\n\n    @action(detail=False, methods=['get'])\n    def me(self, request):\n        \"\"\"\n        Get current user's profile\n        \"\"\"\n        serializer = self.get_serializer(request.user)\n        return Response(serializer.data)\n\n\nclass ConversationViewSet(viewsets.ModelViewSet):\n    \"\"\"\n    ViewSet for managing conversations\n    \"\"\"\n    serializer_class = ConversationSerializer\n    permission_classes = [IsAuthenticated]\n\n    def get_queryset(self):\n        \"\"\"\n        Return conversations where the current user is a participant\n        \"\"\"\n        return Conversation.objects.filter(\n            participants=self.request.user\n        ).prefetch_related('participants', 'messages')\n\n    def get_serializer_class(self):\n        \"\"\"\n        Use different serializers for list and detail views\n        \"\"\"\n        if self.action == 'list':\n            return ConversationListSerializer\n        return ConversationSerializer\n\n    def perform_create(self, serializer):\n        \"\"\"\n        Ensure current user is added as participant\n        \"\"\"\n        serializer.save()\n\n    @action(detail=True, methods=['post'])\n    def send_message(self, request, pk=None):\n        \"\"\"\n        Send a message to a specific conversation\n        \"\"\"\n        conversation = self.get_object()\n\n        # Check if user is participant\n        if not conversation.participants.filter(user_id=request.user.user_id).exists():\n            return Response(\n                {'error': 'You are not a participant in this conversation'},\n                status=status.HTTP_403_FORBIDDEN\n            )\n\n        # Create message\n        message_data = {\n            'conversation': conversation.conversation_id,\n            'message_body': request.data.get('message_body', '')\n        }\n\n        serializer = MessageSerializer(data=message_data, context={'request': request})\n        if serializer.is_valid():\n            serializer.save()\n            return Response(serializer.data, status=status.HTTP_201_CREATED)\n        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)\n\n    @action(detail=False, methods=['post'])\n    def start_conversation(self, request):\n        \"\"\"\n        Start a new conversation with specified participants\n        \"\"\"\n        participant_ids = request.data.get('participants_ids', [])\n\n        if not participant_ids:\n            return Response(\n                {'error': 'At least one participant is required'},\n                status=status.HTTP_400_BAD_REQUEST\n            )\n\n        # Check if conversation already exists with same participants\n        existing_conversation = None\n        for conversation in self.get_queryset():\n            conv_participants = set(conversation.participants.values_list('user_id', flat=True))\n            requested_participants = set([request.user.user_id] + participant_ids)\n\n            if conv_participants == requested_participants:\n                existing_conversation = conversation\n                break\n\n        if existing_conversation:\n            serializer = self.get_serializer(existing_conversation)\n            return Response(serializer.data, status=status.HTTP_200_OK)\n\n        # Create new conversation\n        conversation_data = {'participants_ids': participant_ids}\n        serializer = self.get_serializer(data=conversation_data, context={'request': request})\n\n        if serializer.is_valid():\n            serializer.save()\n            return Response(serializer.data, status=status.HTTP_201_CREATED)\n        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)\n\n\nclass MessageViewSet(viewsets.ModelViewSet):\n    \"\"\"\n    ViewSet for managing messages\n    \"\"\"\n    serializer_class = MessageSerializer\n    permission_classes = [IsAuthenticated]\n\n    def get_queryset(self):\n        \"\"\"\n        Return messages from conversations where user is participant\n        \"\"\"\n        user_conversations = Conversation.objects.filter(\n            participants=self.request.user\n        )\n        return Message.objects.filter(\n            conversation__in=user_conversations\n        ).select_related('sender', 'conversation')\n\n    def perform_create(self, serializer):\n        \"\"\"\n        Ensure sender is set to current user and validate participation\n        \"\"\"\n        # Verify user is participant in the conversation\n        conversation = serializer.validated_data['conversation']\n        if not conversation.participants.filter(user_id=self.request.user.user_id).exists():\n            raise serializers.ValidationError(\n                \"You are not a participant in this conversation\"\n            )\n\n        serializer.save(sender=self.request.user)\n\n    @action(detail=False, methods=['get'])\n    def by_conversation(self, request):\n        \"\"\"\n        Get messages filtered by conversation ID\n        \"\"\"\n        conversation_id = request.query_params.get('conversation_id')\n        if not conversation_id:\n            return Response(\n                {'error': 'conversation_id parameter is required'},\n                status=status.HTTP_400_BAD_REQUEST\n            )\n\n        try:\n            conversation = Conversation.objects.get(\n                conversation_id=conversation_id,\n                participants=request.user\n            )\n        except Conversation.DoesNotExist:\n            return Response(\n                {'error': 'Conversation not found or access denied'},\n                status=status.HTTP_404_NOT_FOUND\n            )\n\n        messages = self.get_queryset().filter(conversation=conversation)\n        page = self.paginate_queryset(messages)\n\n        if page is not None:\n            serializer = self.get_serializer(page, many=True)\n            return self.get_paginated_response(serializer.data)\n\n        serializer = self.get_serializer(messages, many=True)\n        return Response(serializer.data)",
+                    "language": "python"
+                },
+                "codebaseEnabled": true
+            },
+            "createdAt": 1758330810525,
+            "isInternal": false,
+            "rawContent": {
+                "type": "doc",
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Overview"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "In this project, learners will explore the complete lifecycle of designing and implementing robust RESTful APIs using Django. They will begin with scaffolding the project environment and progressively move through identifying and defining data models, establishing database relationships, and setting up clean, scalable URL routing. Emphasis is placed on following Django’s best practices to ensure maintainable and production-ready codebases."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "This project serves as a foundation for any backend developer aiming to master API development using the Django framework and prepares learners to build secure, scalable systems that follow modern architectural patterns."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Project Objectives"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "By the end of this project, learners will be able to:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Scaffold a Django project using industry-standard project structures."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Identify, define, and implement scalable data models using Django’s ORM."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Establish one-to-many, many-to-many, and one-to-one relationships between models."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Create clean and modular Django apps."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Set up and configure URL routing for APIs using Django’s path and include functions."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Follow best practices in file structure, code organization, and documentation."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Build a maintainable API layer using Django REST Framework (optional enhancement)."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Validate and test APIs with real data using tools like Postman or Swagger."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Learning Outcomes"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Upon completing this project, learners will:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Understand the structure of a Django project and how to scaffold it properly."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Be able to design relational database schemas based on feature requirements."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Gain confidence in using Django models and migrations to persist data."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Build and route API endpoints that adhere to RESTful conventions."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Separate concerns by organizing views, serializers (if using DRF), and URL configurations."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Understand and apply modular development strategies by separating logic into reusable apps."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Follow Django’s naming and configuration conventions to improve code readability and team collaboration."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Key Implementation Phases"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Project Setup and Environment Configuration"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Create a virtual environment"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Install Django"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Scaffold the project with django-admin startproject and python manage.py startapp"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Configure settings.py (INSTALLED_APPS, middleware, CORS, etc.)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Defining Data Models"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Identify core models based on requirements (e.g., User, Property, Booking)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Use Django ORM to define model classes"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Add field types, constraints, and default behaviors"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Apply migrations and use Django Admin for verification"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Establishing Relationships"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Implement foreign keys, many-to-many relationships, and one-to-one links"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Use related_name, on_delete, and reverse relationships effectively"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Use Django shell to test object relations"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "URL Routing"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Define app-specific routes using urls.py"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Use include() to modularize routes per app"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Follow RESTful naming conventions: /api/properties/, /api/bookings/<id>/"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Create nested routes when necessary"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Best Practices and Documentation"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Use views.py to separate logic and ensure Single Responsibility"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Document endpoints using README or auto-generated documentation tools"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Keep configuration settings modular (e.g., using .env or settings/ directory structure)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Use versioned APIs (e.g., /api/v1/) to future-proof development"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Best Practices for Scaffolding and Structuring Projects"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "AreaBest PracticesProject StructureKeep a modular structure with reusable apps, consistent naming, and organized folders (apps/, core/, etc.)Environment ConfigUse .env files and django-environ to manage secret keys and settingsModelsAvoid business logic in models; use helper functions or managers when necessaryMigrationsCommit migration files and test them on a fresh databaseRoutingNamespace routes and separate admin/API/user-related URLs for claritySecurityUse ALLOWED_HOSTS, avoid hardcoding credentials, and enable CORS properlyTestingUse Django’s test client or tools like Postman to validate endpoints early and oftenDocumentationAdd inline comments, maintain a clear README, and use tools like Swagger or DRF’s built-in docs"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "📝 Project Assessment (Hybrid)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Your project will be evaluated primarily through manual reviews. To ensure you receive your full score, please:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "✅ Complete your project on time 📄 Submit all required files 🔗 Generate your review link 👥 Have your peers review your work"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "An auto-check will also be in place to verify the presence of core files needed for manual review."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "⏰ Important Note"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "If the deadline passes, you won’t be able to generate your review link—so be sure to submit on time!"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "We’re here to support your learning journey. Happy coding! ✨"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Tasks"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "0. Project set up"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "mandatory"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Objective: create a new django project and install django rest framework"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Instructions:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Initialize a new django project django-admin startproject messaging_app"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Install django REST Framework and set it up in the settings.py"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Create a new app for the messaging functionality. (python manage.py startapp chats)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Repo:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "GitHub repository: alx-backend-python"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Directory: messaging_app"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "File: messaging_app/*"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "1. Define data Models"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "mandatory"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Objective: Design the models for users, messages, and conversations."
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Instructions:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Using the tables definition described above,"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Create the user Model an extension of the Abstract user for values not defined in the built-in Django User model"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Create the conversation model that tracks which users are involved in a conversation"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Create the message model containing the sender, conversation as defined in the shared schema attached to this project"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Database Specification"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Entities and Attributes"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "User"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "codeBlock",
+                        "attrs": {
+                            "language": null
+                        },
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "    user_id (Primary Key, UUID, Indexed)\n    first_name (VARCHAR, NOT NULL)\n    last_name (VARCHAR, NOT NULL)\n    email (VARCHAR, UNIQUE, NOT NULL)\n    password_hash (VARCHAR, NOT NULL)\n    phone_number (VARCHAR, NULL)\n    role (ENUM: 'guest', 'host', 'admin', NOT NULL)\n    created_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)\n"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Message"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "codeBlock",
+                        "attrs": {
+                            "language": null
+                        },
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "    message_id (Primary Key, UUID, Indexed)\n    sender_id (Foreign Key, references User(user_id))\n    message_body (TEXT, NOT NULL)\n    sent_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)\n"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Conversation"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "codeBlock",
+                        "attrs": {
+                            "language": null
+                        },
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "conversation_id (Primary Key, UUID, Indexed)\nparticipants_id (Foreign Key, references User(user_id)\ncreated_at (TIMESTAMP, DEFAULT CURRENT_TIMESTAMP)\n"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Constraints:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "codeBlock",
+                        "attrs": {
+                            "language": null
+                        },
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "    User Table: Unique constraint on email, non-null constraints on required fields.\n    Property Table: Foreign key constraint on host_id, non-null constraints on essential attributes.\n    Booking Table: Foreign key constraints on property_id and user_id, status must be one of pending, confirmed, or canceled.\n    Payment Table: Foreign key constraint on booking_id, ensuring payment is linked to valid bookings.\n    Review Table: Constraints on rating values and foreign keys for property_id and user_id.\n    Message Table: Foreign key constraints on sender_id and recipient_id.\n"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Indexing:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "codeBlock",
+                        "attrs": {
+                            "language": null
+                        },
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "**Primary Keys:** Indexed automatically.\n**Additional Indexes:** Indexes on email (User), property_id (Property and Booking), and booking_id (Booking and Payment)\n"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Repo:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "GitHub repository: alx-backend-python"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Directory: messaging_app"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "File: messaging_app/chats/models.py"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "2. Create serializers to define the many to many relationships"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "mandatory"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Objective: build serializers for the models"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Instructions:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Create Serializers for Users, conversation and message"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Ensure nested relationships are handled properly, like including messages within a conversation"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Repo:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "GitHub repository: alx-backend-python"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Directory: messaging_app"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "File: messaging_app/chats/serializers.py"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "3. Build api endpoints with views"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "mandatory"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Objective: implement API endpoints for conversations and messages"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Instructions:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Using viewsets from rest-framework Create viewsets for listing conversations (ConversationViewSet) and messages (MessageViewSet)"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Implement the endpoints to create a new conversation and send messages to an existing one"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Repo:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "GitHub repository: alx-backend-python"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Directory: messaging_app"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "File: messaging_app/chats/views.py"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "4. Set up url routing"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "mandatory"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Objective: configure URLS for the conversations and messages"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Instructions:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Using Django rest framework DefaultRouter to automatically create the conversations and messages for your viewsets"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Navigate to the main project’s urls.py i.e messaging_app/urls.py and include your created routes with path as api"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Repo:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "GitHub repository: alx-backend-python"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Directory: messaging_app"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "File: messaging_app/chats/urls.py"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "5. Run the application to fix errors"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "mandatory"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Objective: run and test the applications"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Instructions:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Run python manage.py makemigrations, python manage.py migrate, python manage.py runserver to test and run the application"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Fix any error or bugs produced"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Repo:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "GitHub repository: alx-backend-python"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Directory: messaging_app"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "6. Manual Review"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "mandatory"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Repo:"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "GitHub repository: alx-backend-python"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": "Directory: messaging_app                                                                       Analyze all the code and see if what i have done goes in line with the question"
+                            }
+                        ]
+                    }
+                ]
+            },
+            "autoAppliedRules": []
+        }
+    ],
+    "isAgent": true,
+    "isNameGenerated": true,
+    "isCustomAgent": false,
+    "isUnitTestsAgent": false,
+    "isE2EAgent": false,
+    "isWebDevAgent": false,
+    "isQnaAgent": false,
+    "isRepoInfoAgent": false,
+    "model": "default"
+}
+}
