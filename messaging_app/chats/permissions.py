@@ -1,7 +1,4 @@
-# chats/permissions.py
-
 from rest_framework import permissions
-from rest_framework.permissions import BasePermission
 
 
 class IsParticipantOfConversation(BasePermission):
@@ -87,3 +84,35 @@ class IsOwnerOrParticipant(BasePermission):
                     request.user in obj.conversation.participants.all())
 
         return False
+
+
+class IsConversationParticipant(permissions.BasePermission):
+    """
+    Custom permission to only allow participants of a conversation to access messages.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed for conversation participants
+        if request.method in permissions.SAFE_METHODS:
+            return request.user in [obj.conversation.user1, obj.conversation.user2]
+
+        # Write permissions (PUT, PATCH, DELETE) only for message sender
+        if request.method in ['PUT', 'PATCH', 'DELETE']:
+            return obj.sender == request.user
+
+        return False
+
+    def has_permission(self, request, view):
+        # For creating new messages, check if user is part of conversation
+        if request.method == 'POST':
+            conversation_id = request.data.get('conversation')
+            if not conversation_id:
+                return False
+
+            try:
+                conversation = view.get_queryset().first().conversation.__class__.objects.get(id=conversation_id)
+                return request.user in [conversation.user1, conversation.user2]
+            except:
+                return False
+
+        return True

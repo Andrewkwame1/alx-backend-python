@@ -5,13 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1bbe6fbb-da38-4d96-a6c1-052217ba1032" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/alx-backend-python.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/alx-backend-python.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/zencoder-chat-index.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/zencoder-chat-index.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/zencoder/chats/95a83481-da71-4434-8c60-b4209db6149c.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/messaging_app/chats/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/messaging_app/chats/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messaging_app/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/messaging_app/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/messaging_app/chats/permissions.py" beforeDir="false" afterPath="$PROJECT_DIR$/messaging_app/chats/permissions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/messaging_app/messaging_app/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/messaging_app/messaging_app/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/messaging_app/messaging_app/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/messaging_app/messaging_app/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +102,7 @@
       <workItem from="1758999156681" duration="11000" />
       <workItem from="1758999375867" duration="3304000" />
       <workItem from="1759006213111" duration="1368000" />
-      <workItem from="1759008036087" duration="2114000" />
+      <workItem from="1759008036087" duration="2896000" />
     </task>
     <servers />
   </component>
