@@ -43,6 +43,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'chats.middleware.RequestLoggingMiddleware',       # Task 1: Log all requests
+    'chats.middleware.RestrictAccessByTimeMiddleware', # Task 2: Time-based access control
+    'chats.middleware.OffensiveLanguageMiddleware',    # Task 3: Rate limiting
+    'chats.middleware.RolePermissionMiddleware',   
 ]
 
 ROOT_URLCONF = 'messaging_app.urls'
@@ -119,6 +124,26 @@ REST_FRAMEWORK = {
     ]
 }
 
+#Configure logging settings
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'requests.log',
+        },
+    },
+    'loggers': {
+        'request_logger': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
 # Simple JWT Configuration
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -128,7 +153,7 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': False,
 
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY, 
+    'SIGNING_KEY': SECRET_KEY,
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
