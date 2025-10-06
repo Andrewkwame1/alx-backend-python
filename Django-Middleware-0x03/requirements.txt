@@ -1,0 +1,12 @@
+# Core Django
+Django>=4.2,<5.0
+
+# Optional but recommended for the messaging app
+djangorestframework>=3.14.0
+django-filter>=23.2
+
+# Database (if using PostgreSQL instead of SQLite)
+# psycopg2-binary>=2.9.6
+
+# Development tools
+# django-debug-toolbar>=4.1.0

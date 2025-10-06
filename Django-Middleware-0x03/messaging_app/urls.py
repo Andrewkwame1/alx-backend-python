@@ -41,4 +41,6 @@ urlpatterns = [
 
     # DRF Browsable API (for development)
     path('api-auth/', include('rest_framework.urls')),
+    # Traditional chat endpoints (used by middleware tests)
+    path('chats/', include('chats.urls')),
 ]

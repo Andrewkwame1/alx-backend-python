@@ -4,16 +4,44 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+# Load environment variables from .env when available
+try:
+    from dotenv import load_dotenv
+    load_dotenv(dotenv_path=Path(__file__).resolve().parent.parent / '.env')
+except Exception:
+    # python-dotenv is optional in some environments; environment variables
+    # can be provided by the host instead.
+    pass
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-your-secret-key-change-in-production'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-your-secret-key-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
+# Host configuration
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+
+# Production flag (when True, stricter security settings are applied)
+PRODUCTION = os.environ.get('PRODUCTION', 'False') == 'True'
+
+# Security defaults for production (only applied when PRODUCTION=True)
+if PRODUCTION:
+    SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', 31536000))
+    SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'True') == 'True'
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+else:
+    # development safe defaults
+    SECURE_HSTS_SECONDS = 0
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
 
 # Application definition
 INSTALLED_APPS = [
@@ -33,6 +61,9 @@ INSTALLED_APPS = [
     # Local apps
     'chats',
 ]
+
+# Use the custom user model defined in the chats app to avoid conflicts
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Optional: for CORS
@@ -69,6 +100,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'messaging_app.wsgi.application'
+
+# Cache configuration for rate limiting
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
 
 # Database
 DATABASES = {
@@ -124,7 +162,7 @@ REST_FRAMEWORK = {
     ]
 }
 
-#Configure logging settings
+# Configure logging settings
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -133,6 +171,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'requests.log',
+            'delay': True,
         },
     },
     'loggers': {

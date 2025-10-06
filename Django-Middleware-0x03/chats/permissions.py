@@ -1,90 +1,134 @@
 from rest_framework import permissions
+from rest_framework.permissions import BasePermission
 
 
 class IsParticipantOfConversation(BasePermission):
     """
     Custom permission to only allow participants of a conversation to access it.
-    This is the main permission class as requested in the requirements.
+    This permission class ensures that only participants can access, modify,
+    or delete messages and conversations they are part of.
     """
 
     def has_permission(self, request, view):
         """
-        Return True if the user is authenticated.
+        Initial permission check.
+        Ensure user is authenticated and allow create operations.
         """
-        return request.user and request.user.is_authenticated
+        if not request.user or not request.user.is_authenticated:
+            return False
+
+        # Allow creating new conversations/messages
+        if request.method == 'POST':
+            return True
+
+        return True  # Further checks in has_object_permission
 
     def has_object_permission(self, request, view, obj):
         """
-        Object-level permission to only allow participants of a conversation
-        to view, edit, or delete messages/conversations.
+        Object-level permission check.
+        Allow access only to conversation participants.
+        For messages, check both sender and conversation participant status.
         """
         # For conversation objects
-        if hasattr(obj, 'participants'):
-            return request.user in obj.participants.all()
+        if hasattr(obj, 'user1') and hasattr(obj, 'user2'):
+            return request.user in [obj.user1, obj.user2]
 
-        # For message objects - check if user is participant of the conversation
+        # For message objects
         if hasattr(obj, 'conversation'):
-            return request.user in obj.conversation.participants.all()
+            conversation = obj.conversation
+            is_participant = request.user in [conversation.user1, conversation.user2]
+            
+            # For safe methods (GET, HEAD, OPTIONS), being a participant is enough
+            if request.method in permissions.SAFE_METHODS:
+                return is_participant
+                
+            # For modify/delete operations, must be the sender
+            if request.method in ['PUT', 'PATCH', 'DELETE']:
+                return obj.sender == request.user
+                
+            return is_participant
 
-        # For other objects, deny access by default
         return False
 
 
 class IsMessageSender(BasePermission):
     """
     Custom permission to only allow message senders to edit/delete their messages.
+    This permission is more strict than IsParticipantOfConversation as it only
+    allows the original sender to modify messages.
     """
 
     def has_permission(self, request, view):
         """
-        Return True if the user is authenticated.
+        Initial permission check.
+        Only allow authenticated users.
         """
         return request.user and request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
         """
-        Object-level permission to only allow message senders to edit/delete.
+        Object-level permission check.
+        Allow read access to conversation participants,
+        but restrict modifications to the message sender.
         """
-        # Allow read permissions for any authenticated user who is a participant
-        if request.method in permissions.SAFE_METHODS:
-            if hasattr(obj, 'conversation'):
-                return request.user in obj.conversation.participants.all()
-            return False
+        # First check if user is a conversation participant
+        if hasattr(obj, 'conversation'):
+            is_participant = request.user in [
+                obj.conversation.user1,
+                obj.conversation.user2
+            ]
+            
+            # For safe methods, being a participant is enough
+            if request.method in permissions.SAFE_METHODS:
+                return is_participant
 
-        # Write permissions only for the message sender
-        return obj.sender == request.user
+            # For modifications, must be the sender
+            return obj.sender == request.user
+
+        return False
 
 
 class IsOwnerOrParticipant(BasePermission):
     """
-    Custom permission to only allow owners or participants to access objects.
+    Custom permission combining ownership and participation rights.
+    This permission is useful for operations that should be allowed for
+    both the owner/sender and participants of a conversation.
     """
 
     def has_permission(self, request, view):
         """
-        Return True if the user is authenticated.
+        Initial permission check.
+        Only allow authenticated users.
         """
         return request.user and request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
         """
-        Object-level permission to only allow owners or participants.
+        Object-level permission check.
+        Allow access if user is either the owner/sender or a participant.
         """
-        # If the object has a sender field (like messages)
-        if hasattr(obj, 'sender'):
-            return obj.sender == request.user
-
-        # If the object has participants (like conversations)
-        if hasattr(obj, 'participants'):
-            return request.user in obj.participants.all()
-
         # For message objects
-        if hasattr(obj, 'conversation'):
-            return (obj.sender == request.user or
-                    request.user in obj.conversation.participants.all())
+        if hasattr(obj, 'sender') and hasattr(obj, 'conversation'):
+            return (
+                obj.sender == request.user or
+                request.user in [obj.conversation.user1, obj.conversation.user2]
+            )
+
+        # For conversation objects
+        if hasattr(obj, 'user1') and hasattr(obj, 'user2'):
+            return request.user in [obj.user1, obj.user2]
 
         return False
 
+
+class IsMessageSender(BasePermission):
+    """
+    Custom permission to only allow the sender of a message to modify/delete it.
+    """
+    def has_object_permission(self, request, view, obj):
+        # obj is a Message instance
+        # Allow sender or staff to modify
+        return obj.sender == request.user or request.user.is_staff
 
 class IsConversationParticipant(permissions.BasePermission):
     """

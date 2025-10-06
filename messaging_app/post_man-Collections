@@ -1,40 +1,9 @@
 {
   "info": {
-    "_postman_id": "messaging-app-collection",
-    "name": "Messaging App API",
-    "description": "Collection for testing the Django messaging app API endpoints with authentication and permissions",
+    "_postman_id": "messaging-app-collection-fixed",
+    "name": "Messaging App API - Fixed",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{access_token}}",
-        "type": "string"
-      }
-    ]
-  },
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
-    },
-    {
-      "listen": "test",
-      "script": {
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
-    }
-  ],
   "variable": [
     {
       "key": "base_url",
@@ -69,27 +38,10 @@
   ],
   "item": [
     {
-      "name": "Authentication",
+      "name": "Auth",
       "item": [
         {
-          "name": "Register User",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (responseCode.code === 201) {",
-                  "    const response = pm.response.json();",
-                  "    pm.environment.set('access_token', response.tokens.access);",
-                  "    pm.environment.set('refresh_token', response.tokens.refresh);",
-                  "    pm.environment.set('user_id', response.user.id);",
-                  "    console.log('User registered and tokens saved');",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
+          "name": "Register",
           "request": {
             "method": "POST",
             "header": [
@@ -100,48 +52,75 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"username\": \"testuser1\",\n    \"email\": \"testuser1@example.com\",\n    \"password\": \"securepassword123\",\n    \"first_name\": \"Test\",\n    \"last_name\": \"User\"\n}"
+              "raw": "{\n  \"username\": \"testuser1\",\n  \"email\": \"testuser1@example.com\",\n  \"password\": \"securepassword123\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/users/?search=test",
+              "raw": "{{base_url}}/auth/register/",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
-                "users",
-                ""
-              ],
-              "query": [
-                {
-                  "key": "search",
-                  "value": "test"
-                }
+                "auth",
+                "register"
               ]
             }
           }
-        }
-      ]
-    },
-    {
-      "name": "Conversations",
-      "item": [
+        },
         {
-          "name": "Create Conversation",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (responseCode.code === 201) {",
-                  "    const response = pm.response.json();",
-                  "    pm.environment.set('conversation_id', response.id);",
-                  "    console.log('Conversation created with ID:', response.id);",
-                  "}"
-                ],
-                "type": "text/javascript"
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
               }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser1\",\n  \"password\": \"securepassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
-          ],
+          }
+        },
+        {
+          "name": "Token Refresh",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/token/refresh/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "token",
+                "refresh"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout",
           "request": {
             "method": "POST",
             "header": [
@@ -156,7 +135,68 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"Test Conversation\",\n    \"participant_ids\": [2, 3]\n}"
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/logout/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Conversations",
+      "item": [
+        {
+          "name": "Create Conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Test Conversation\",\n  \"participant_ids\": [2,3]\n}"
             },
             "url": {
               "raw": "{{base_url}}/conversations/",
@@ -164,8 +204,7 @@
                 "{{base_url}}"
               ],
               "path": [
-                "conversations",
-                ""
+                "conversations"
               ]
             }
           }
@@ -186,126 +225,7 @@
                 "{{base_url}}"
               ],
               "path": [
-                "conversations",
-                ""
-              ]
-            }
-          }
-        },
-        {
-          "name": "Get Conversation Details",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/conversations/{{conversation_id}}/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "conversations",
-                "{{conversation_id}}",
-                ""
-              ]
-            }
-          }
-        },
-        {
-          "name": "Update Conversation",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"title\": \"Updated Conversation Title\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/conversations/{{conversation_id}}/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "conversations",
-                "{{conversation_id}}",
-                ""
-              ]
-            }
-          }
-        },
-        {
-          "name": "Add Participant",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"user_id\": 4\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/conversations/{{conversation_id}}/add_participant/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "conversations",
-                "{{conversation_id}}",
-                "add_participant",
-                ""
-              ]
-            }
-          }
-        },
-        {
-          "name": "Remove Participant",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"user_id\": 4\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/conversations/{{conversation_id}}/remove_participant/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "conversations",
-                "{{conversation_id}}",
-                "remove_participant",
-                ""
+                "conversations"
               ]
             }
           }
@@ -317,21 +237,6 @@
       "item": [
         {
           "name": "Send Message",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (responseCode.code === 201) {",
-                  "    const response = pm.response.json();",
-                  "    pm.environment.set('message_id', response.id);",
-                  "    console.log('Message sent with ID:', response.id);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
           "request": {
             "method": "POST",
             "header": [
@@ -346,7 +251,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"conversation_id\": {{conversation_id}},\n    \"content\": \"Hello! This is a test message.\",\n    \"message_type\": \"text\"\n}"
+              "raw": "{\n  \"conversation_id\": {{conversation_id}},\n  \"content\": \"Hello!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/messages/",
@@ -354,14 +259,13 @@
                 "{{base_url}}"
               ],
               "path": [
-                "messages",
-                ""
+                "messages"
               ]
             }
           }
         },
         {
-          "name": "List Messages (Paginated)",
+          "name": "List Messages",
           "request": {
             "method": "GET",
             "header": [
@@ -376,8 +280,7 @@
                 "{{base_url}}"
               ],
               "path": [
-                "messages",
-                ""
+                "messages"
               ],
               "query": [
                 {
@@ -393,128 +296,7 @@
           }
         },
         {
-          "name": "Get Conversation Messages",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/messages/conversation_messages/?conversation_id={{conversation_id}}&page=1",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "messages",
-                "conversation_messages",
-                ""
-              ],
-              "query": [
-                {
-                  "key": "conversation_id",
-                  "value": "{{conversation_id}}"
-                },
-                {
-                  "key": "page",
-                  "value": "1"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Filter Messages by Sender",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/messages/?sender_username=testuser1",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "messages",
-                ""
-              ],
-              "query": [
-                {
-                  "key": "sender_username",
-                  "value": "testuser1"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Filter Messages by Date Range",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/messages/?timestamp_after=2024-01-01T00:00:00Z&timestamp_before=2024-12-31T23:59:59Z",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "messages",
-                ""
-              ],
-              "query": [
-                {
-                  "key": "timestamp_after",
-                  "value": "2024-01-01T00:00:00Z"
-                },
-                {
-                  "key": "timestamp_before",
-                  "value": "2024-12-31T23:59:59Z"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Filter Messages by Time Range",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/messages/?time_range=last_week",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "messages",
-                ""
-              ],
-              "query": [
-                {
-                  "key": "time_range",
-                  "value": "last_week"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Search Messages by Content",
+          "name": "Search Messages",
           "request": {
             "method": "GET",
             "header": [
@@ -739,174 +521,3 @@
     }
   ]
 }
-							"raw": "{{base_url}}/auth/register/",
-"host": [
-  "{{base_url}}"
-],
-"path": [
-  "auth",
-  "register",
-  ""
-]
-}
-}
-},
-{
-"name": "Login User",
-"event": [
-{
-"listen": "test",
-"script": {
-  "exec": [
-    "if (responseCode.code === 200) {",
-    "    const response = pm.response.json();",
-    "    pm.environment.set('access_token', response.tokens.access);",
-    "    pm.environment.set('refresh_token', response.tokens.refresh);",
-    "    pm.environment.set('user_id', response.user.id);",
-    "    console.log('Login successful, tokens saved');",
-    "}"
-  ],
-  "type": "text/javascript"
-}
-}
-],
-"request": {
-"method": "POST",
-"header": [
-{
-  "key": "Content-Type",
-  "value": "application/json"
-}
-],
-"body": {
-"mode": "raw",
-"raw": "{\n    \"username\": \"testuser1\",\n    \"password\": \"securepassword123\"\n}"
-},
-"url": {
-"raw": "{{base_url}}/auth/login/",
-"host": [
-  "{{base_url}}"
-],
-"path": [
-  "auth",
-  "login",
-  ""
-]
-}
-}
-},
-{
-"name": "Token Refresh",
-"event": [
-{
-"listen": "test",
-"script": {
-  "exec": [
-    "if (responseCode.code === 200) {",
-    "    const response = pm.response.json();",
-    "    pm.environment.set('access_token', response.access);",
-    "    if (response.refresh) {",
-    "        pm.environment.set('refresh_token', response.refresh);",
-    "    }",
-    "    console.log('Token refreshed');",
-    "}"
-  ],
-  "type": "text/javascript"
-}
-}
-],
-"request": {
-"method": "POST",
-"header": [
-{
-  "key": "Content-Type",
-  "value": "application/json"
-}
-],
-"body": {
-"mode": "raw",
-"raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
-},
-"url": {
-"raw": "{{base_url}}/auth/token/refresh/",
-"host": [
-  "{{base_url}}"
-],
-"path": [
-  "auth",
-  "token",
-  "refresh",
-  ""
-]
-}
-}
-},
-{
-"name": "Logout User",
-"request": {
-"method": "POST",
-"header": [
-{
-  "key": "Content-Type",
-  "value": "application/json"
-},
-{
-  "key": "Authorization",
-  "value": "Bearer {{access_token}}"
-}
-],
-"body": {
-"mode": "raw",
-"raw": "{\n    \"refresh_token\": \"{{refresh_token}}\"\n}"
-},
-"url": {
-"raw": "{{base_url}}/auth/logout/",
-"host": [
-  "{{base_url}}"
-],
-"path": [
-  "auth",
-  "logout",
-  ""
-]
-}
-}
-}
-]
-},
-{
-"name": "Users",
-"item": [
-{
-"name": "List Users",
-"request": {
-"method": "GET",
-"header": [
-{
-  "key": "Authorization",
-  "value": "Bearer {{access_token}}"
-}
-],
-"url": {
-"raw": "{{base_url}}/users/",
-"host": [
-  "{{base_url}}"
-],
-"path": [
-  "users",
-  ""
-]
-}
-}
-},
-{
-"name": "Search Users",
-"request": {
-"method": "GET",
-"header": [
-{
-  "key": "Authorization",
-  "value": "Bearer {{access_token}}"
-}
-],
-"url": {

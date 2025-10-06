@@ -1,0 +1,12 @@
+2025-10-06 02:15:07.367322 - User: testuser - Path: /chats/
+2025-10-06 02:15:07.373307 - User: Anonymous - Path: /chats/
+2025-10-06 02:15:07.381293 - User: Anonymous - Path: /chats/
+2025-10-06 02:15:07.384277 - User: Anonymous - Path: /chats/
+2025-10-06 02:15:07.387270 - User: Anonymous - Path: /admin/
+2025-10-06 02:15:09.398128 - User: admin - Path: /chats/messages/1/delete/
+2025-10-06 02:15:11.290556 - User: regular - Path: /chats/conversations/1/moderate/
+2025-10-06 02:15:13.158683 - User: moderator - Path: /chats/messages/1/delete/
+2025-10-06 02:15:15.098236 - User: regular - Path: /chats/
+2025-10-06 02:15:17.007060 - User: regular - Path: /chats/messages/1/delete/
+2025-10-06 02:15:18.592327 - User: Anonymous - Path: /chats/messages/1/delete/
+2025-10-06 02:15:59.587213 - User: Anonymous - Path: /chats/

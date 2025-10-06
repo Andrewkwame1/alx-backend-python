@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import User, Conversation, Message
+from .models import Conversation, Message
 
-# Register your models here.
-admin.site.register(User)
+# Register models used in the tests
 admin.site.register(Conversation)
 admin.site.register(Message)
