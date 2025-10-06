@@ -1,5 +1,4 @@
-# messaging_app/settings.py
-
+# Django Settings for MessagingApp
 import os
 from pathlib import Path
 from datetime import timedelta
@@ -35,13 +34,14 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+
     # Custom middleware - Order matters!
     'chats.middleware.RequestLoggingMiddleware',       # Task 1: Log all requests
     'chats.middleware.RestrictAccessByTimeMiddleware', # Task 2: Time-based access control
@@ -52,6 +52,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'messaging_app.urls'
 
 TEMPLATES = [
+    {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
@@ -66,27 +67,14 @@ TEMPLATES = [
     },
 ]
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'requests.log',
-            'delay': True,
-        },
-    },
-    'loggers': {
-        'request_logger': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-    },
-}
-
 WSGI_APPLICATION = 'messaging_app.wsgi.application'
+
+# Cache configuration for rate limiting
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
 
 # Database
 DATABASES = {
@@ -124,18 +112,6 @@ STATIC_URL = 'static/'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Cache configuration for rate limiting
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    }
-}
-
-# Enforce chat hours middleware; set to False by default to avoid
-# interfering with tests that don't mock time. Time-based tests mock
-# timezone.now() and will exercise the middleware as needed.
-ENFORCE_CHAT_HOURS = False
-
 # Django REST Framework Configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -152,6 +128,27 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ]
+}
+
+# Configure logging settings
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'requests.log',
+            'delay': True,
+        },
+    },
+    'loggers': {
+        'request_logger': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
 }
 
 # Simple JWT Configuration
@@ -181,14 +178,10 @@ SIMPLE_JWT = {
 }
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000').split(',')
-CORS_ALLOW_ALL_ORIGINS = DEBUG and os.environ.get('CORS_ALLOW_ALL', 'False') == 'True'
-CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8080",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = DEBUG

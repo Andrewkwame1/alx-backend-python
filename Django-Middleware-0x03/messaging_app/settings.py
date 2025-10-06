@@ -69,7 +69,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Optional: for CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -78,13 +77,12 @@ MIDDLEWARE = [
     'chats.middleware.RequestLoggingMiddleware',       # Task 1: Log all requests
     'chats.middleware.RestrictAccessByTimeMiddleware', # Task 2: Time-based access control
     'chats.middleware.OffensiveLanguageMiddleware',    # Task 3: Rate limiting
-    'chats.middleware.RolePermissionMiddleware',   
+    'chats.middleware.RolepermissionMiddleware',   
 ]
 
 ROOT_URLCONF = 'messaging_app.urls'
 
 TEMPLATES = [
-    {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
         'APP_DIRS': True,
