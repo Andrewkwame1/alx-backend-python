@@ -177,3 +177,44 @@ Test API endpoints using tools like:
 ## License
 
 This project is created for educational purposes as part of the ALX Backend Python program.
+
+## Kubernetes / Minikube quick-start (local validation)
+
+This repository also includes Kubernetes manifests and helper scripts for local testing with Minikube. The manifests use sample Docker image names — update them to your registry or load images into Minikube before applying.
+
+Sample image names used in manifests:
+- `andrewkwame1/messaging-app:latest`
+- `andrewkwame1/messaging-app:1.1`
+- `andrewkwame1/messaging-app:2.0`
+
+Quick steps (PowerShell on Windows):
+
+```powershell
+# 1) Start Docker Desktop
+# 2) Start minikube with containerd (recommended)
+minikube delete
+minikube start --driver=docker --container-runtime=containerd --container-runtime-endpoint=unix:///var/run/containerd/containerd.sock --memory=4096 --cpus=2
+
+# 3) Verify cluster
+kubectl cluster-info
+kubectl get pods -A
+
+# 4) Load or publish images so Minikube can pull them
+# Option A: push to Docker Hub and update manifests
+# Option B: build locally and load into minikube:
+minikube image load andrewkwame1/messaging-app:latest
+
+# 5) Apply manifests
+kubectl apply -f deployment.yaml
+kubectl apply -f kubeservice.yaml
+kubectl apply -f blue_deployment.yaml
+kubectl apply -f green_deployment.yaml
+kubectl apply -f ingress.yaml
+
+# 6) Use helper scripts (PowerShell or bash) in this folder to scale and run tests
+```
+
+Notes:
+- If you see errors involving `/var/run/cri-dockerd.sock`, start Minikube with `--container-runtime=containerd` (see step 2).
+- To enable ingress (NGINX) run: `minikube addons enable ingress`.
+- Replace the sample image names with your real registry path or use `minikube image load` for local images.

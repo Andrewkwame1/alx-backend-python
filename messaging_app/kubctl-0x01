@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# kubctl-0x01 - scale messaging-app deployment to 3 replicas and run verifications
+
+set -euo pipefail
+
+DEPLOYMENT_NAME=messaging-app
+NAMESPACE=default
+
+echo "Scaling deployment ${DEPLOYMENT_NAME} to 3 replicas..."
+kubectl scale deployment/${DEPLOYMENT_NAME} --replicas=3
+
+echo "Waiting for pods to be ready..."
+kubectl wait --for=condition=available --timeout=120s deployment/${DEPLOYMENT_NAME}
+
+echo "Listing pods..."
+kubectl get pods -l app=${DEPLOYMENT_NAME}
+
+if command -v wrk >/dev/null 2>&1; then
+  echo "Running a short wrk load test against the service via minikube service tunnel..."
+  # Run wrk against the ClusterIP via port-forwarding in background
+  kubectl port-forward svc/messaging-app-service 8000:8000 >/dev/null 2>&1 &
+  PF_PID=$!
+  sleep 1
+  wrk -t2 -c10 -d10s http://127.0.0.1:8000/
+  kill $PF_PID || true
+else
+  echo "wrk not installed; skipping load test. Install wrk to run load tests." >&2
+fi
+
+if command -v kubectl >/dev/null 2>&1; then
+  if kubectl top pods >/dev/null 2>&1; then
+    echo "Resource usage (kubectl top pods):"
+    kubectl top pods
+  else
+    echo "kubectl top not available - ensure metrics-server is installed in your cluster." >&2
+  fi
+fi
+
+echo "Done."

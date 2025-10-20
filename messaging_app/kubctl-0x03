@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# kubctl-0x03 - apply rolling update for blue deployment and monitor progress
+
+set -euo pipefail
+
+DEPLOYMENT=messaging-app-blue
+SERVICE=messaging-app-service
+
+echo "Applying updated blue deployment..."
+kubectl apply -f blue_deployment.yaml
+
+echo "Triggering rollout and monitoring status..."
+kubectl rollout status deployment/${DEPLOYMENT} --timeout=180s
+
+echo "Starting a background curl loop to test availability..."
+# run a short background loop to continuously hit the service
+kubectl port-forward svc/${SERVICE} 8000:8000 >/dev/null 2>&1 &
+PF_PID=$!
+sleep 1
+(
+  for i in {1..60}; do
+    if curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/ | grep -q "200"; then
+      printf "."
+    else
+      printf "x"
+    fi
+    sleep 1
+  done
+  echo
+)&
+
+wait $PF_PID || true
+
+echo "Listing current pods for deployment ${DEPLOYMENT}:"
+kubectl get pods -l version=blue
+
+echo "Rolling update script completed." 
