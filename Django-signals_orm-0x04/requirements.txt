@@ -1,0 +1,15 @@
+asgiref==3.9.1                      # Django async support
+Django==5.2.6                       # ✅ Core framework (newer version)
+django-cors-headers==4.9.0          # For API CORS (not needed for this project)
+django-environ==0.12.0              # Environment variables
+django-filter==25.1                 # Advanced filtering (not needed for this project)
+djangorestframework==3.16.1         # REST API framework (not needed for this project)
+djangorestframework_simplejwt==5.5.1 # JWT auth (not needed for this project)
+drf-nested-routers==0.95.0          # DRF routing (not needed for this project)
+Markdown==3.9                       # Markdown support
+mysql-connector-python==9.4.0       # MySQL driver (you're using MySQL!)
+parameterized==0.9.0                # Testing utilities
+PyJWT==2.10.1                       # JWT tokens
+python-dotenv==1.1.1                # Load .env files
+sqlparse==0.5.3                     # SQL parsing
+tzdata==2025.2                      # Timezone data
