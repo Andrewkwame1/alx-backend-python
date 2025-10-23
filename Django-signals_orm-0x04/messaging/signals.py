@@ -26,7 +26,8 @@ def log_message_edits(sender, instance, **kwargs):
             if old_message.content != instance.content:
                 MessageHistory.objects.create(
                     message=instance,
-                    old_content=old_message.content
+                    old_content=old_message.content,
+                    edited_by=instance.sender  # User who edited the message
                 )
                 instance.edited = True
         except Message.DoesNotExist:
@@ -34,5 +35,17 @@ def log_message_edits(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=User)
 def cleanup_user_data(sender, instance, **kwargs):
-    """Log user deletion - related data will be deleted via CASCADE"""
-    logger.info(f"User {instance.username} (ID: {instance.id}) has been deleted. Related data cleanup completed.")
+    """Clean up all user-related data when user is deleted"""
+    # Delete all messages sent by the user
+    Message.objects.filter(sender=instance).delete()
+    
+    # Delete all messages received by the user
+    Message.objects.filter(receiver=instance).delete()
+    
+    # Delete all notifications for the user
+    Notification.objects.filter(user=instance).delete()
+    
+    # Delete all message history entries edited by the user
+    MessageHistory.objects.filter(edited_by=instance).delete()
+    
+    logger.info(f"User {instance.username} (ID: {instance.id}) has been deleted. All related messages, notifications, and edit histories have been removed.")

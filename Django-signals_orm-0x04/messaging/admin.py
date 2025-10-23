@@ -15,7 +15,7 @@ class NotificationAdmin(admin.ModelAdmin):
 
 @admin.register(MessageHistory)
 class MessageHistoryAdmin(admin.ModelAdmin):
-    list_display = ['message', 'edited_at']
+    list_display = ['message', 'edited_by', 'edited_at']
     list_filter = ['edited_at']
-    search_fields = ['message__sender__username', 'message__receiver__username']
+    search_fields = ['message__sender__username', 'message__receiver__username', 'edited_by__username']
     readonly_fields = ['edited_at']

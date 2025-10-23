@@ -79,6 +79,7 @@ class MessageEditHistorySignalTest(TestCase):
         history = MessageHistory.objects.first()
         self.assertEqual(history.message, message)
         self.assertEqual(history.old_content, original_content)
+        self.assertEqual(history.edited_by, self.sender)  # Verify edited_by is captured
         self.assertTrue(message.edited)
 
     def test_message_edited_flag(self):

@@ -31,7 +31,10 @@ class UnreadMessagesManager(models.Manager):
         ).select_related('sender', 'receiver').only(
             'id', 'sender__username', 'receiver__username', 'content', 'timestamp', 'read'
         )
-
+    
+    def unread_for_user(self, user):
+        """Alias for for_user method - get unread messages for a specific user"""
+        return self.for_user(user)
 
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
@@ -60,9 +63,10 @@ class MessageHistory(models.Model):
     message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='history')
     old_content = models.TextField()
     edited_at = models.DateTimeField(auto_now_add=True)
+    edited_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_edits')
     
     def __str__(self):
-        return f"History for Message {self.message.id}"
+        return f"History for Message {self.message.id} - Edited by {self.edited_by.username}"
 
 
 class Notification(models.Model):
