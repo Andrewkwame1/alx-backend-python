@@ -65,6 +65,29 @@ def message_list(request):
     })
 
 
+@cache_page(60)
+@login_required
+def user_messages(request):
+    """Get all messages for the authenticated user with optimized prefetch and select related"""
+    receiver = request.GET.get('receiver', None)
+    
+    # Filter messages where current user is sender with optimizations
+    if receiver:
+        messages_queryset = Message.objects.filter(
+            sender=request.user,
+            receiver__username=receiver
+        ).select_related('sender', 'receiver', 'parent_message').prefetch_related('messagehistory_set')
+    else:
+        messages_queryset = Message.objects.filter(
+            sender=request.user
+        ).select_related('sender', 'receiver', 'parent_message').prefetch_related('messagehistory_set')
+    
+    return JsonResponse({
+        'messages': MessageSerializer(messages_queryset, many=True).data,
+        'count': messages_queryset.count()
+    })
+
+
 class MessageViewSet(viewsets.ModelViewSet):
     """ViewSet for Message operations with optimized queries"""
     serializer_class = MessageSerializer
