@@ -6,6 +6,7 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_DB: ${MYSQL_DB}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -16,7 +17,8 @@ services:
 
   web:
     build: .
-    command: gunicorn messaging_app.wsgi:application --bind 0.0.0.0:8000
+    # Use Django development server for simpler local testing (auto-checks expect manage.py runserver)
+    command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
       - ./:/app
     env_file:

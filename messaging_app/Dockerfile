@@ -5,6 +5,9 @@ FROM python:3.10-slim
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+# Example: to run the built image locally bind port 8000 to the host use:
+#   docker run -p 8000:8000 <image_name>:<tag>
+
 # Set work directory
 WORKDIR /app
 
