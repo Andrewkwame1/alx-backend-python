@@ -1,0 +1,135 @@
+#!/bin/bash
+
+echo "=== Kubernetes Scaling and Load Testing Script ==="
+echo ""
+
+# Configuration
+DEPLOYMENT_NAME="django-messaging-app"
+NAMESPACE="default"
+TARGET_REPLICAS=3
+SERVICE_NAME="django-messaging-service"
+PORT=8000
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" &> /dev/null
+}
+
+# Check prerequisites
+echo "1. Checking prerequisites..."
+if ! command_exists kubectl; then
+    echo "ERROR: kubectl is not installed!"
+    exit 1
+fi
+echo "✓ kubectl is installed"
+
+if ! command_exists wrk; then
+    echo "WARNING: wrk is not installed. Load testing will be skipped."
+    echo "Install wrk from: https://github.com/wg/wrk"
+    WRK_INSTALLED=false
+else
+    echo "✓ wrk is installed"
+    WRK_INSTALLED=true
+fi
+echo ""
+
+# Scale the deployment
+echo "2. Scaling deployment to $TARGET_REPLICAS replicas..."
+kubectl scale deployment/$DEPLOYMENT_NAME --replicas=$TARGET_REPLICAS -n $NAMESPACE
+if [ $? -ne 0 ]; then
+    echo "ERROR: Failed to scale deployment"
+    exit 1
+fi
+echo "✓ Deployment scaled successfully"
+echo ""
+
+# Wait for pods to be ready
+echo "3. Waiting for pods to be ready..."
+sleep 5
+kubectl wait --for=condition=ready pod -l app=django-messaging -n $NAMESPACE --timeout=120s
+echo ""
+
+# Verify pods are running
+echo "4. Verifying pods are running..."
+echo "Current pod status:"
+kubectl get pods -l app=django-messaging -n $NAMESPACE
+POD_COUNT=$(kubectl get pods -l app=django-messaging -n $NAMESPACE --field-selector=status.phase=Running --no-headers | wc -l)
+echo ""
+echo "Running pods: $POD_COUNT/$TARGET_REPLICAS"
+echo ""
+
+# Get deployment details
+echo "5. Deployment details:"
+kubectl get deployment $DEPLOYMENT_NAME -n $NAMESPACE
+echo ""
+
+# Monitor resource usage
+echo "6. Monitoring resource usage..."
+echo "NOTE: Metrics server must be installed for 'kubectl top' to work"
+echo "Install with: kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml"
+echo ""
+
+# Check if metrics-server is available
+kubectl top nodes &>/dev/null
+if [ $? -eq 0 ]; then
+    echo "Node resource usage:"
+    kubectl top nodes
+    echo ""
+
+    echo "Pod resource usage:"
+    kubectl top pods -l app=django-messaging -n $NAMESPACE
+    echo ""
+else
+    echo "⚠ Metrics server is not available. Skipping resource monitoring."
+    echo "Install metrics-server to enable 'kubectl top' commands."
+    echo ""
+fi
+
+# Perform load testing
+if [ "$WRK_INSTALLED" = true ]; then
+    echo "7. Setting up port forwarding for load testing..."
+
+    # Start port forwarding in background
+    kubectl port-forward service/$SERVICE_NAME $PORT:$PORT -n $NAMESPACE &
+    PORT_FORWARD_PID=$!
+    sleep 3
+
+    echo "✓ Port forwarding established (PID: $PORT_FORWARD_PID)"
+    echo ""
+
+    echo "8. Performing load test with wrk..."
+    echo "Test parameters: 12 threads, 400 connections, 30 seconds duration"
+    echo "Target URL: http://localhost:$PORT/"
+    echo ""
+
+    wrk -t12 -c400 -d30s http://localhost:$PORT/
+
+    echo ""
+    echo "Load test completed!"
+    echo ""
+
+    # Monitor resources after load test
+    if kubectl top nodes &>/dev/null; then
+        echo "9. Resource usage after load test:"
+        kubectl top pods -l app=django-messaging -n $NAMESPACE
+        echo ""
+    fi
+
+    # Kill port forward
+    echo "Cleaning up port forwarding..."
+    kill $PORT_FORWARD_PID 2>/dev/null
+    echo "✓ Port forwarding stopped"
+else
+    echo "7. Skipping load test (wrk not installed)"
+fi
+
+echo ""
+echo "=== Summary ==="
+echo "Deployment: $DEPLOYMENT_NAME"
+echo "Target replicas: $TARGET_REPLICAS"
+echo "Running pods: $POD_COUNT"
+echo ""
+echo "View logs with: kubectl logs -l app=django-messaging -n $NAMESPACE --tail=50"
+echo "Scale down with: kubectl scale deployment/$DEPLOYMENT_NAME --replicas=1 -n $NAMESPACE"
+echo ""
+echo "=== Script completed successfully! ==="
