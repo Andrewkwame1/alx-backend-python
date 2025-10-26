@@ -1,0 +1,263 @@
+!/bin/bash
+
+echo "=== Kubernetes Rolling Update Script ==="
+echo ""
+
+# Configuration
+DEPLOYMENT_FILE="messaging_app/blue_deployment.yaml"
+DEPLOYMENT_NAME="django-messaging-app-blue"
+SERVICE_NAME="django-messaging-service"
+NAMESPACE="default"
+PORT=8000
+REQUEST_INTERVAL=1  # seconds between requests
+
+# Colors
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+print_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Check prerequisites
+print_info "Checking prerequisites..."
+if ! command -v kubectl &> /dev/null; then
+    print_error "kubectl is not installed!"
+    exit 1
+fi
+
+if ! command -v curl &> /dev/null; then
+    print_error "curl is not installed!"
+    exit 1
+fi
+
+print_success "All prerequisites met"
+echo ""
+
+# Step 1: Check current deployment
+print_info "Step 1: Checking current deployment state..."
+kubectl get deployment $DEPLOYMENT_NAME -n $NAMESPACE
+if [ $? -ne 0 ]; then
+    print_error "Deployment $DEPLOYMENT_NAME not found"
+    exit 1
+fi
+
+CURRENT_IMAGE=$(kubectl get deployment $DEPLOYMENT_NAME -n $NAMESPACE -o jsonpath='{.spec.template.spec.containers[0].image}')
+print_info "Current image: $CURRENT_IMAGE"
+echo ""
+
+# Step 2: Get current pod count
+CURRENT_PODS=$(kubectl get pods -l app=django-messaging,version=blue -n $NAMESPACE --field-selector=status.phase=Running --no-headers | wc -l)
+print_info "Current running pods: $CURRENT_PODS"
+echo ""
+
+# Step 3: Start port forwarding in background for testing
+print_info "Step 2: Setting up port forwarding for downtime testing..."
+kubectl port-forward service/$SERVICE_NAME $PORT:$PORT -n $NAMESPACE &
+PORT_FORWARD_PID=$!
+sleep 3
+
+if ps -p $PORT_FORWARD_PID > /dev/null 2>&1; then
+    print_success "Port forwarding established (PID: $PORT_FORWARD_PID)"
+else
+    print_error "Failed to establish port forwarding"
+    exit 1
+fi
+echo ""
+
+# Step 4: Start continuous testing in background
+print_info "Step 3: Starting continuous availability testing..."
+TEST_LOG="rolling_update_test.log"
+ERROR_LOG="rolling_update_errors.log"
+> $TEST_LOG
+> $ERROR_LOG
+
+# Background process to continuously test the application
+(
+    SUCCESS_COUNT=0
+    FAILURE_COUNT=0
+    START_TIME=$(date +%s)
+
+    while true; do
+        TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:$PORT/ --max-time 5 2>/dev/null)
+
+        if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "301" ] || [ "$HTTP_CODE" = "302" ]; then
+            SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+            echo "$TIMESTAMP - SUCCESS (HTTP $HTTP_CODE) - Total: $SUCCESS_COUNT successes, $FAILURE_COUNT failures" >> $TEST_LOG
+        else
+            FAILURE_COUNT=$((FAILURE_COUNT + 1))
+            echo "$TIMESTAMP - FAILURE (HTTP ${HTTP_CODE:-000}) - Total: $SUCCESS_COUNT successes, $FAILURE_COUNT failures" | tee -a $TEST_LOG $ERROR_LOG
+        fi
+
+        sleep $REQUEST_INTERVAL
+    done
+) &
+TEST_PID=$!
+
+print_success "Testing process started (PID: $TEST_PID)"
+echo "Sending requests every ${REQUEST_INTERVAL}s to http://localhost:$PORT/"
+echo ""
+
+# Give testing a moment to start
+sleep 3
+
+# Step 5: Apply the updated deployment
+print_info "Step 4: Applying updated deployment file..."
+kubectl apply -f $DEPLOYMENT_FILE
+
+if [ $? -ne 0 ]; then
+    print_error "Failed to apply deployment file"
+    kill $TEST_PID $PORT_FORWARD_PID 2>/dev/null
+    exit 1
+fi
+
+print_success "Deployment file applied - rolling update initiated"
+echo ""
+
+# Step 6: Monitor rollout status
+print_info "Step 5: Monitoring rolling update progress..."
+echo "This may take a few minutes depending on your readiness probes..."
+echo ""
+
+kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE --timeout=5m
+
+ROLLOUT_STATUS=$?
+
+echo ""
+
+if [ $ROLLOUT_STATUS -ne 0 ]; then
+    print_error "Rolling update failed or timed out!"
+    print_warning "Rolling back to previous version..."
+    kubectl rollout undo deployment/$DEPLOYMENT_NAME -n $NAMESPACE
+    kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE
+else
+    print_success "Rolling update completed successfully!"
+fi
+echo ""
+
+# Step 7: Verify the update
+print_info "Step 6: Verifying the rolling update..."
+
+NEW_IMAGE=$(kubectl get deployment $DEPLOYMENT_NAME -n $NAMESPACE -o jsonpath='{.spec.template.spec.containers[0].image}')
+print_info "New image: $NEW_IMAGE"
+echo ""
+
+print_info "Current pods after update:"
+kubectl get pods -l app=django-messaging,version=blue -n $NAMESPACE
+echo ""
+
+UPDATED_PODS=$(kubectl get pods -l app=django-messaging,version=blue -n $NAMESPACE --field-selector=status.phase=Running --no-headers | wc -l)
+print_info "Running pods after update: $UPDATED_PODS"
+echo ""
+
+# Step 8: Check rollout history
+print_info "Step 7: Rollout history:"
+kubectl rollout history deployment/$DEPLOYMENT_NAME -n $NAMESPACE
+echo ""
+
+# Step 9: Stop testing and analyze results
+print_info "Step 8: Stopping availability tests and analyzing results..."
+sleep 5  # Let a few more requests complete
+kill $TEST_PID 2>/dev/null
+wait $TEST_PID 2>/dev/null
+
+echo ""
+print_info "Test Results Summary:"
+echo "----------------------------------------"
+
+if [ -f $TEST_LOG ]; then
+    TOTAL_REQUESTS=$(wc -l < $TEST_LOG)
+    SUCCESS_REQUESTS=$(grep -c "SUCCESS" $TEST_LOG)
+    FAILURE_REQUESTS=$(grep -c "FAILURE" $TEST_LOG)
+
+    echo "Total requests: $TOTAL_REQUESTS"
+    echo "Successful: $SUCCESS_REQUESTS"
+    echo "Failed: $FAILURE_REQUESTS"
+
+    if [ $FAILURE_REQUESTS -gt 0 ]; then
+        FAILURE_RATE=$(awk "BEGIN {printf \"%.2f\", ($FAILURE_REQUESTS/$TOTAL_REQUESTS)*100}")
+        echo "Failure rate: ${FAILURE_RATE}%"
+
+        if [ $FAILURE_REQUESTS -lt 3 ]; then
+            print_success "Minimal downtime detected (${FAILURE_REQUESTS} failed requests)"
+        else
+            print_warning "Some downtime detected during update"
+        fi
+
+        if [ -f $ERROR_LOG ]; then
+            echo ""
+            print_info "Failed requests:"
+            tail -10 $ERROR_LOG
+        fi
+    else
+        print_success "Zero downtime! All requests succeeded during rolling update"
+    fi
+
+    echo ""
+    print_info "Last 10 test results:"
+    tail -10 $TEST_LOG
+else
+    print_warning "No test log found"
+fi
+
+echo ""
+echo "----------------------------------------"
+echo ""
+
+# Step 10: Cleanup port forwarding
+print_info "Step 9: Cleaning up..."
+kill $PORT_FORWARD_PID 2>/dev/null
+wait $PORT_FORWARD_PID 2>/dev/null
+print_success "Port forwarding stopped"
+echo ""
+
+# Step 11: Final pod status
+print_info "Step 10: Final deployment status:"
+kubectl get deployment $DEPLOYMENT_NAME -n $NAMESPACE
+echo ""
+
+print_info "Final pods:"
+kubectl get pods -l app=django-messaging,version=blue -n $NAMESPACE -o wide
+echo ""
+
+# Step 12: Show recent pod events
+print_info "Recent deployment events:"
+kubectl describe deployment $DEPLOYMENT_NAME -n $NAMESPACE | grep -A 10 "Events:"
+echo ""
+
+# Summary
+echo "=== Rolling Update Summary ==="
+print_info "Previous image: $CURRENT_IMAGE"
+print_info "Current image:  $NEW_IMAGE"
+print_info "Pods before update: $CURRENT_PODS"
+print_info "Pods after update:  $UPDATED_PODS"
+echo ""
+
+if [ $ROLLOUT_STATUS -eq 0 ]; then
+    print_success "Rolling update completed successfully!"
+else
+    print_error "Rolling update failed - check logs above"
+fi
+
+echo ""
+echo "Test logs saved to:"
+echo "  - $TEST_LOG (all requests)"
+echo "  - $ERROR_LOG (failed requests only)"
+echo ""
+echo "=== Script Complete ==="

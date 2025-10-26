@@ -4,10 +4,10 @@ echo "=== Kubernetes Scaling and Load Testing Script ==="
 echo ""
 
 # Configuration
-DEPLOYMENT_NAME="django-messaging-app"
+DEPLOYMENT_NAME="django-messaging-app-blue"
 NAMESPACE="default"
 TARGET_REPLICAS=3
-SERVICE_NAME="django-messaging-service"
+SERVICE_NAME="django-messaging-service-blue"
 PORT=8000
 
 # Function to check if a command exists
@@ -133,3 +133,9 @@ echo "View logs with: kubectl logs -l app=django-messaging -n $NAMESPACE --tail=
 echo "Scale down with: kubectl scale deployment/$DEPLOYMENT_NAME --replicas=1 -n $NAMESPACE"
 echo ""
 echo "=== Script completed successfully! ==="
+
+# Service for Blue deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-messaging-service-blue
