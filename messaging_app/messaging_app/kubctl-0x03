@@ -1,0 +1,117 @@
+#!/bin/bash
+
+# Colors for output
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# Function to print messages
+print_message() {
+    echo -e "${GREEN}[INFO]${NC} $1"
+}
+
+# Function to print warnings
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+# Function to print errors
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Function to check if a command exists
+check_command() {
+    if ! command -v "$1" &> /dev/null; then
+        print_error "$1 is required but not installed."
+        exit 1
+    fi
+}
+
+# Check required commands
+check_command kubectl
+check_command curl
+
+# Get service URL
+get_service_url() {
+    # Get NodePort from service
+    NODE_PORT=$(kubectl get svc django-messaging-service -o jsonpath='{.spec.ports[0].nodePort}')
+    if [ -z "$NODE_PORT" ]; then
+        print_error "Could not get NodePort from service"
+        exit 1
+    fi
+    
+    # Get Minikube IP
+    MINIKUBE_IP=$(minikube ip)
+    if [ -z "$MINIKUBE_IP" ]; then
+        print_error "Could not get Minikube IP"
+        exit 1
+    fi
+    
+    echo "http://$MINIKUBE_IP:$NODE_PORT"
+}
+
+# Function to test application availability
+test_availability() {
+    local url=$1
+    local response
+    response=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+    echo "$response"
+}
+
+# Main execution
+print_message "Starting rolling update to version 2.0..."
+
+# Apply the updated deployment
+print_message "Applying updated deployment configuration..."
+kubectl apply -f blue_deployment.yaml
+
+# Start monitoring in background
+print_message "Starting availability monitoring..."
+SERVICE_URL=$(get_service_url)
+print_message "Service URL: $SERVICE_URL"
+
+# Monitor availability while update is in progress
+print_message "Monitoring deployment rollout..."
+while true; do
+    # Check deployment status
+    ROLLOUT_STATUS=$(kubectl rollout status deployment/django-messaging-app --timeout=1s 2>&1)
+    
+    # Test application availability
+    STATUS_CODE=$(test_availability "$SERVICE_URL")
+    
+    # Print status
+    echo -n "."
+    if [ "$STATUS_CODE" != "200" ]; then
+        print_warning "Service returned status code: $STATUS_CODE"
+    fi
+    
+    # Check if rollout is complete
+    if [[ $ROLLOUT_STATUS == *"successfully rolled out"* ]]; then
+        break
+    fi
+    
+    sleep 1
+done
+
+echo # New line after dots
+
+print_message "Verifying deployment..."
+# Get current pods and their status
+kubectl get pods -l app=django-messaging -o wide
+
+# Final verification
+print_message "Checking pod images..."
+kubectl get pods -l app=django-messaging -o jsonpath='{.items[*].spec.containers[*].image}' | tr -s '[[:space:]]' '\n'
+
+print_message "Rolling update completed successfully!"
+print_message "New version 2.0 is now deployed"
+
+# Final availability check
+FINAL_STATUS=$(test_availability "$SERVICE_URL")
+if [ "$FINAL_STATUS" == "200" ]; then
+    print_message "Application is responding successfully (Status: $FINAL_STATUS)"
+else
+    print_warning "Application might have issues (Status: $FINAL_STATUS)"
+fi
