@@ -1,0 +1,23 @@
+# Install Nginx Ingress Controller (Minikube)
+minikube addons enable ingress
+
+# Verify Ingress Controller is running
+kubectl get pods -n ingress-nginx
+
+# Apply the Ingress configuration
+kubectl apply -f messaging_app/ingress.yaml
+
+# Verify Ingress resource
+kubectl get ingress
+
+# Describe Ingress for details
+kubectl describe ingress django-messaging-ingress
+
+# Get Ingress IP/hostname
+kubectl get ingress django-messaging-ingress
+
+# Test the Ingress (if using Minikube)
+minikube service django-messaging-service --url
+
+# Port forward for testing (alternative)
+kubectl port-forward service/django-messaging-service 8000:8000

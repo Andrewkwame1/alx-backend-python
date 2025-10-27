@@ -1,0 +1,52 @@
+# Service for Blue deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-messaging-service-blue
+  labels:
+    app: django-messaging
+    version: blue
+spec:
+  type: ClusterIP
+  selector:
+    app: django-messaging
+    version: blue
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+---
+# Service for Green deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-messaging-service-green
+  labels:
+    app: django-messaging
+    version: green
+spec:
+  type: ClusterIP
+  selector:
+    app: django-messaging
+    version: green
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+---
+# Main service - switch between blue and green by changing selector
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-messaging-service
+  labels:
+    app: django-messaging
+spec:
+  type: ClusterIP
+  selector:
+    app: django-messaging
+    version: blue  # Change to 'green' to switch traffic
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000

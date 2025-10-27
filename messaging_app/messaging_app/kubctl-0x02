@@ -1,0 +1,206 @@
+#!/bin/bash
+
+echo "=== Kubernetes Blue-Green Deployment Script ==="
+echo ""
+
+# Configuration
+NAMESPACE="default"
+BLUE_DEPLOYMENT="messaging_app/blue_deployment.yaml"
+GREEN_DEPLOYMENT="messaging_app/green_deployment.yaml"
+SERVICES="messaging_app/kubeservice.yaml"
+WAIT_TIME=30
+
+# Colors for output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# Function to print colored output
+print_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Check if kubectl is available
+if ! command -v kubectl &> /dev/null; then
+    print_error "kubectl is not installed!"
+    exit 1
+fi
+
+# Step 1: Deploy Blue version
+print_info "Step 1: Deploying BLUE version..."
+kubectl apply -f $BLUE_DEPLOYMENT
+if [ $? -ne 0 ]; then
+    print_error "Failed to deploy blue version"
+    exit 1
+fi
+print_success "Blue deployment applied"
+echo ""
+
+# Step 2: Apply services
+print_info "Step 2: Creating/Updating services..."
+kubectl apply -f $SERVICES
+if [ $? -ne 0 ]; then
+    print_error "Failed to apply services"
+    exit 1
+fi
+print_success "Services applied"
+echo ""
+
+# Step 3: Wait for blue deployment to be ready
+print_info "Step 3: Waiting for blue deployment to be ready..."
+kubectl wait --for=condition=available --timeout=120s deployment/django-messaging-app-blue -n $NAMESPACE
+if [ $? -ne 0 ]; then
+    print_error "Blue deployment failed to become ready"
+    exit 1
+fi
+print_success "Blue deployment is ready"
+echo ""
+
+# Step 4: Check blue pods
+print_info "Step 4: Checking BLUE pods status..."
+kubectl get pods -l version=blue -n $NAMESPACE
+echo ""
+
+# Step 5: Check blue pod logs
+print_info "Step 5: Checking BLUE deployment logs..."
+BLUE_POD=$(kubectl get pods -l version=blue -n $NAMESPACE -o jsonpath='{.items[0].metadata.name}')
+if [ ! -z "$BLUE_POD" ]; then
+    echo "Logs from pod: $BLUE_POD"
+    kubectl logs $BLUE_POD -n $NAMESPACE --tail=20
+    if [ $? -ne 0 ]; then
+        print_warning "Could not retrieve logs from blue pod"
+    fi
+else
+    print_warning "No blue pods found"
+fi
+echo ""
+
+# Step 6: Deploy Green version
+print_info "Step 6: Deploying GREEN version..."
+kubectl apply -f $GREEN_DEPLOYMENT
+if [ $? -ne 0 ]; then
+    print_error "Failed to deploy green version"
+    exit 1
+fi
+print_success "Green deployment applied"
+echo ""
+
+# Step 7: Wait for green deployment to be ready
+print_info "Step 7: Waiting for green deployment to be ready..."
+kubectl wait --for=condition=available --timeout=120s deployment/django-messaging-app-green -n $NAMESPACE
+if [ $? -ne 0 ]; then
+    print_error "Green deployment failed to become ready"
+    print_info "Rolling back to blue version..."
+    kubectl delete -f $GREEN_DEPLOYMENT
+    exit 1
+fi
+print_success "Green deployment is ready"
+echo ""
+
+# Step 8: Check green pods
+print_info "Step 8: Checking GREEN pods status..."
+kubectl get pods -l version=green -n $NAMESPACE
+echo ""
+
+# Step 9: Check green pod logs for errors
+print_info "Step 9: Checking GREEN deployment logs for errors..."
+GREEN_POD=$(kubectl get pods -l version=green -n $NAMESPACE -o jsonpath='{.items[0].metadata.name}')
+if [ ! -z "$GREEN_POD" ]; then
+    echo "Logs from pod: $GREEN_POD"
+    kubectl logs $GREEN_POD -n $NAMESPACE --tail=20
+
+    # Check for common error patterns
+    ERROR_COUNT=$(kubectl logs $GREEN_POD -n $NAMESPACE | grep -iE "error|exception|failed|fatal" | wc -l)
+
+    if [ $ERROR_COUNT -gt 0 ]; then
+        print_warning "Found $ERROR_COUNT potential errors in green deployment logs"
+        echo "Review the logs above before switching traffic"
+    else
+        print_success "No errors detected in green deployment"
+    fi
+else
+    print_warning "No green pods found"
+fi
+echo ""
+
+# Step 10: Show current state
+print_info "Step 10: Current deployment state..."
+echo ""
+echo "Blue Deployment:"
+kubectl get deployment django-messaging-app-blue -n $NAMESPACE
+echo ""
+echo "Green Deployment:"
+kubectl get deployment django-messaging-app-green -n $NAMESPACE
+echo ""
+echo "All Pods:"
+kubectl get pods -l app=django-messaging -n $NAMESPACE
+echo ""
+
+# Step 11: Show current traffic routing
+print_info "Step 11: Current traffic routing..."
+CURRENT_VERSION=$(kubectl get service django-messaging-service -n $NAMESPACE -o jsonpath='{.spec.selector.version}')
+echo "Main service is currently routing to: $CURRENT_VERSION"
+echo ""
+
+# Step 12: Provide switch instructions
+echo "=== TRAFFIC SWITCH INSTRUCTIONS ==="
+echo ""
+print_info "To switch traffic from BLUE to GREEN, run:"
+echo "  kubectl patch service django-messaging-service -n $NAMESPACE -p '{\"spec\":{\"selector\":{\"version\":\"green\"}}}'"
+echo ""
+print_info "To verify the switch:"
+echo "  kubectl get service django-messaging-service -n $NAMESPACE -o yaml | grep version"
+echo ""
+print_info "To rollback to BLUE if issues occur:"
+echo "  kubectl patch service django-messaging-service -n $NAMESPACE -p '{\"spec\":{\"selector\":{\"version\":\"blue\"}}}'"
+echo ""
+print_info "To delete the old BLUE deployment after successful switch:"
+echo "  kubectl delete -f $BLUE_DEPLOYMENT"
+echo ""
+
+# Step 13: Interactive switch option
+read -p "Do you want to switch traffic to GREEN now? (y/n): " -n 1 -r
+echo ""
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    print_info "Switching traffic to GREEN version..."
+    kubectl patch service django-messaging-service -n $NAMESPACE -p '{"spec":{"selector":{"version":"green"}}}'
+
+    if [ $? -eq 0 ]; then
+        print_success "Traffic switched to GREEN version!"
+        echo ""
+        print_info "Monitoring GREEN pods for $WAIT_TIME seconds..."
+        sleep $WAIT_TIME
+
+        # Check for errors after switch
+        kubectl logs -l version=green -n $NAMESPACE --tail=50 | grep -iE "error|exception|failed|fatal"
+
+        if [ $? -eq 0 ]; then
+            print_warning "Errors detected after traffic switch. Consider rollback."
+        else
+            print_success "GREEN version is handling traffic successfully!"
+        fi
+    else
+        print_error "Failed to switch traffic"
+    fi
+else
+    print_info "Traffic switch skipped. Blue version is still serving traffic."
+fi
+
+echo ""
+echo "=== Blue-Green Deployment Complete ==="
+print_success "Both versions are deployed and ready"
+echo ""
