@@ -1,0 +1,87 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKER_IMAGE_NAME = 'yourusername/messaging-app'
+        DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Pulling source code from GitHub...'
+                git branch: 'main',
+                    credentialsId: 'github-credentials',
+                    url: 'https://github.com/yourusername/alx-backend-python.git'
+            }
+        }
+        
+        stage('Setup Environment') {
+            steps {
+                echo 'Setting up Python environment...'
+                sh '''
+                    cd messaging_app
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements.txt
+                '''
+            }
+        }
+        
+        stage('Run Tests') {
+            steps {
+                echo 'Running tests with pytest...'
+                sh '''
+                    cd messaging_app
+                    . venv/bin/activate
+                    pytest --verbose --junit-xml=test-reports/results.xml
+                '''
+            }
+        }
+        
+        stage('Generate Test Report') {
+            steps {
+                echo 'Publishing test results...'
+                junit 'messaging_app/test-reports/results.xml'
+            }
+        }
+        
+        stage('Build Docker Image') {
+            steps {
+                echo 'Building Docker image...'
+                sh '''
+                    cd messaging_app
+                    docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} .
+                    docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ${DOCKER_IMAGE_NAME}:latest
+                '''
+            }
+        }
+        
+        stage('Push to Docker Hub') {
+            steps {
+                echo 'Pushing Docker image to Docker Hub...'
+                sh '''
+                    echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u $DOCKER_HUB_CREDENTIALS_USR --password-stdin
+                    docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                    docker push ${DOCKER_IMAGE_NAME}:latest
+                '''
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Cleaning up...'
+            sh 'docker logout'
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Please check the logs.'
+        }
+    }
+}
