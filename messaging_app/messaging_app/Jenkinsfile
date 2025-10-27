@@ -2,6 +2,7 @@ pipeline {
     agent any
     
     environment {
+        GITHUB_CREDENTIALS = credentials('github-credentials')
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         DOCKER_IMAGE = 'andrewkwame1/django-messaging-app'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
@@ -13,6 +14,7 @@ pipeline {
             steps {
                 echo 'Pulling source code from GitHub...'
                 git branch: 'main',
+                    credentialsId: 'github-credentials',
                     url: 'https://github.com/Andrewkwame1/alx-backend-python.git'
             }
         }
@@ -26,11 +28,11 @@ pipeline {
                     . venv/bin/activate
                     
                     # Upgrade pip and install dependencies
-                    python -m pip install --upgrade pip
-                    pip install -r messaging_app/requirements.txt
+                    pip3 install --upgrade pip
+                    pip3 install -r messaging_app/requirements.txt
                     
                     # Install testing dependencies
-                    pip install pytest pytest-cov pytest-django flake8
+                    pip3 install pytest pytest-cov pytest-django flake8
                 '''
             }
         }
